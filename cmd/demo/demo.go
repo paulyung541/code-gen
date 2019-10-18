@@ -15,6 +15,7 @@ type Demo struct {
 	AbsolutePath string
 	Name         string
 	CreatorName  string
+	PkgName      string
 	CreatedTime  string
 }
 
@@ -54,6 +55,22 @@ func (d *Demo) Create() error {
 	makeFileTemplate := template.Must(template.New("Makefile").Parse(string(tpl.MakefileTemplate())))
 	err = makeFileTemplate.Execute(makeFile, d)
 	if err != nil {
+		return err
+	}
+
+	return createBaseGOMOD(projectPath, d.PkgName)
+}
+
+// create go.mod file
+func createBaseGOMOD(projectPath, name string) error {
+	modFile, err := os.Create(projectPath + "/go.mod")
+	if err != nil {
+		return err
+	}
+	defer modFile.Close()
+
+	if n, err := modFile.WriteString(fmt.Sprintf("module %s", name)); err != nil {
+		n++
 		return err
 	}
 

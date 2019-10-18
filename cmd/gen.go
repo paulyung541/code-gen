@@ -38,7 +38,6 @@ example:
 		main.go
 		Makefile`,
 	Run: func(cmd *cobra.Command, args []string) {
-
 		// 暂时这样写，以后再扩展其它模板
 		isGenDemo, _ := cmd.Flags().GetBool("gen-demo")
 		if !isGenDemo {
@@ -49,23 +48,33 @@ example:
 		if err != nil {
 			er(err)
 		}
-		fmt.Println("wd: ", wd)
 
 		projectName, err := cmd.Flags().GetString("name")
 		if err != nil {
 			er(err)
 		}
 
+		pkgName, err := cmd.Flags().GetString("pkg-name")
+		if err != nil {
+			er(err)
+		}
+
+		userName := os.Getenv("USER")
+		if pkgName == "" {
+			pkgName = fmt.Sprintf("demo.com/%s/%s", userName, projectName)
+		}
+
 		demoPro := &demo.Demo{
 			AbsolutePath: wd,
 			Name:         projectName,
+			PkgName:      pkgName,
 			CreatorName:  os.Getenv("USER"),
 		}
 		if err = demoPro.Create(); err != nil {
 			er(err)
 		}
 
-		fmt.Printf("your demo project <%s> is ready!!!", projectName)
+		fmt.Printf("your demo project <%s> is ready!!!\n", projectName)
 	},
 }
 
@@ -74,6 +83,8 @@ func init() {
 
 	// 是否是生成 demo 代码
 	genCmd.Flags().BoolP("gen-demo", "d", false, "create demo project")
-	// 模板文件位置
+	// demo project name
 	genCmd.Flags().StringP("name", "n", "demo", "demo project name")
+	// pkg name
+	genCmd.Flags().StringP("pkg-name", "", "", "demo pkg name")
 }
