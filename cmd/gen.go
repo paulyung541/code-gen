@@ -1,18 +1,3 @@
-/*
-Copyright © 2019 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
@@ -32,11 +17,11 @@ var genCmd = &cobra.Command{
 	Long: `生成demo项目模板，使用方法如下
 
 example:
-	$ysydtp gen -d -n project 会在当前目录生成名称为 project 的目录；目录结构如下
+$code-gen gen -d -n project 会在当前目录生成名称为 project 的目录；目录结构如下
 
-	./project
-		main.go
-		Makefile`,
+./project
+	main.go
+	Makefile`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// 暂时这样写，以后再扩展其它模板
 		isGenDemo, _ := cmd.Flags().GetBool("gen-demo")
