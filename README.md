@@ -6,7 +6,7 @@ a code generator CLI tool
 
 # how to use
 ```bash
-$ code-gen -d -n {your_project_name}
+$ code-gen gen -d -n {your_project_name}
 ```
 then the `{your_project_name}` project will created in your current directory like follow
 ```

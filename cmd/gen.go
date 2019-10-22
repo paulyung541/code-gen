@@ -13,7 +13,7 @@ import (
 // genCmd represents the gen command
 var genCmd = &cobra.Command{
 	Use:   "gen",
-	Short: "A brief description of your command",
+	Short: "code generator",
 	Long: `生成demo项目模板，使用方法如下
 
 example:
