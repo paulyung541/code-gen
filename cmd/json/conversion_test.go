@@ -44,19 +44,19 @@ func TestUnderline2hump(t *testing.T) {
 	}{
 		{
 			"user_name",
-			"userName",
+			"UserName",
 		},
 		{
 			"good_things_i_think",
-			"goodThingsIThink",
+			"GoodThingsIThink",
 		},
 		{
 			"name_id",
-			"nameID",
+			"NameID",
 		},
 		{
 			"test_json_file",
-			"testJSONFile",
+			"TestJSONFile",
 		},
 	}
 

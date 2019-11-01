@@ -150,7 +150,8 @@ func underline2hump(s string) string {
 }
 
 func haveIDString(s string) bool {
-	return false
+	s = strings.ToLower(s)
+	return strings.Contains(s, "id")
 }
 
 func (f *ConversionFiles) createJSONFile() error {
