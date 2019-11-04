@@ -98,7 +98,7 @@ func oneStruct(buf *bytes.Buffer, data []byte, structName string) error {
 			continue
 		}
 		goMember := underline2hump(jsonKey)
-		buf.WriteString(fmt.Sprintf("%s %s `json:\"name:%s\"`\n", goMember, goType, jsonKey))
+		buf.WriteString(fmt.Sprintf("%s %s `json:\"%s\"`\n", goMember, goType, jsonKey))
 	}
 	buf.WriteString("}")
 	return nil
