@@ -56,7 +56,7 @@ asm:
 
 .PHONY: clean
 clean:
-	rm -rf a.out *.o *.i
+	rm -rf $(PROJECT_NAME) *.o *.i
 
 `)
 }
