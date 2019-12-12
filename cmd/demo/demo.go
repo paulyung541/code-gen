@@ -1,78 +1,23 @@
 package demo
 
-import (
-	"fmt"
-	"os"
-	"text/template"
-	"time"
-
-	"github.com/paulyung541/code-gen/tpl"
-)
-
-const timeLayout = "2006-01-02 15:04:05"
+import "os"
 
 type Demo struct {
 	AbsolutePath string
 	Name         string
 	CreatorName  string
-	PkgName      string
 	CreatedTime  string
 }
 
-func (d *Demo) Create() error {
-	projectPath := d.AbsolutePath + "/" + d.Name
-	d.CreatedTime = time.Now().Format(timeLayout)
+const timeLayout = "2006-01-02 15:04:05"
 
+func (d *Demo) createDir() (string, error) {
+	projectPath := d.AbsolutePath + "/" + d.Name
 	if _, err := os.Stat(projectPath); os.IsNotExist(err) {
 		// create directory
 		if err := os.Mkdir(projectPath, 0754); err != nil {
-			return err
+			return "", err
 		}
 	}
-
-	// create main.go
-	mainFile, err := os.Create(fmt.Sprintf("%s/main.go", projectPath))
-	if err != nil {
-		return err
-	}
-	defer mainFile.Close()
-
-	// write content to main.go
-	mainTemplate := template.Must(template.New("main").Parse(string(tpl.MainTemplate())))
-	err = mainTemplate.Execute(mainFile, d)
-	if err != nil {
-		return err
-	}
-
-	// create Makefile
-	makeFile, err := os.Create(fmt.Sprintf("%s/Makefile", projectPath))
-	if err != nil {
-		return err
-	}
-	defer makeFile.Close()
-
-	// write content to Makefile
-	makeFileTemplate := template.Must(template.New("Makefile").Parse(string(tpl.MakefileTemplate())))
-	err = makeFileTemplate.Execute(makeFile, d)
-	if err != nil {
-		return err
-	}
-
-	return createBaseGOMOD(projectPath, d.PkgName)
-}
-
-// create go.mod file
-func createBaseGOMOD(projectPath, name string) error {
-	modFile, err := os.Create(projectPath + "/go.mod")
-	if err != nil {
-		return err
-	}
-	defer modFile.Close()
-
-	if n, err := modFile.WriteString(fmt.Sprintf("module %s", name)); err != nil {
-		n++
-		return err
-	}
-
-	return nil
+	return projectPath, nil
 }

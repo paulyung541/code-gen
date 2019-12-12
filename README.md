@@ -5,6 +5,8 @@ a code generator CLI tool
 > go get -u github.com/paulyung541/code-gen
 
 ## create demo project
+### golang
+default is golang
 ```bash
 $ code-gen gen -d -n {your_project_name}
 ```
@@ -13,6 +15,12 @@ then the `{your_project_name}` project will created in your current directory li
 ./your_project_name
     main.go
     Makefile
+```
+
+### clang
+use `--demo-type` flag
+```bash
+$ code-gen gen -d -n ysy --demo-type clang
 ```
 
 ## json to golang struct

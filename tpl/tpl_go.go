@@ -1,7 +1,7 @@
 package tpl
 
 // MainTemplate main.go 内容
-func MainTemplate() []byte {
+func MainTemplateGo() []byte {
 	return []byte(`/*
 	This is a demo name {{ .Name }} created by {{ .CreatorName }}
 	{{ .CreatedTime }}
@@ -20,7 +20,7 @@ func main() {
 }
 
 // MakefileTemplate Makefile 内容
-func MakefileTemplate() []byte {
+func MakefileTemplateGo() []byte {
 	return []byte(`# This is a demo name {{ .Name }} created by {{ .CreatorName }}
 # {{ .CreatedTime }}
 
@@ -30,7 +30,7 @@ TEST                    ?= $(shell go list ./... | grep -v '/vendor/')
 TESTARGS                ?= -v -race
 
 .PHONY: all
-all: build
+all: build run
 
 .PHONY: setup
 setup:
@@ -56,7 +56,12 @@ lint:
 .PHONY: build
 build:
 	@echo ">> building binaries"
-	@$(GO) build -o {{ .Name }}
+	@$(GO) build -o $(PROJECT_NAME)
+
+.PHONY: run
+run:
+	@echo ">> run binaries"
+	@./$(PROJECT_NAME)
 
 .PHONY: clean
 clean:

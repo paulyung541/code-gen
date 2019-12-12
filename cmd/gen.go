@@ -29,11 +29,6 @@ $code-gen gen -d -n project 会在当前目录生成名称为 project 的目录�
 			er(errors.New("you should add '-d' flag to create demo"))
 		}
 
-		wd, err := os.Getwd()
-		if err != nil {
-			er(err)
-		}
-
 		projectName, err := cmd.Flags().GetString("name")
 		if err != nil {
 			er(err)
@@ -49,17 +44,45 @@ $code-gen gen -d -n project 会在当前目录生成名称为 project 的目录�
 			pkgName = fmt.Sprintf("demo.com/%s/%s", userName, projectName)
 		}
 
-		demoPro := &demo.Demo{
-			AbsolutePath: wd,
-			Name:         projectName,
-			PkgName:      pkgName,
-			CreatorName:  os.Getenv("USER"),
-		}
-		if err = demoPro.Create(); err != nil {
+		wd, err := os.Getwd()
+		if err != nil {
 			er(err)
 		}
 
-		fmt.Printf("your demo project <%s> is ready!!!\n", projectName)
+		codeType, err := cmd.Flags().GetString("demo-type")
+		if err != nil {
+			er(err)
+		}
+		switch codeType {
+		case "golang":
+			demoPro := &demo.DemoGo{
+				Demo: &demo.Demo{
+					AbsolutePath: wd,
+					Name:         projectName,
+					CreatorName:  userName,
+				},
+				PkgName: pkgName,
+			}
+			if err = demoPro.Create(); err != nil {
+				er(err)
+			}
+		case "clang":
+			demoPro := &demo.DemoC{
+				Demo: &demo.Demo{
+					AbsolutePath: wd,
+					Name:         projectName,
+					CreatorName:  userName,
+				},
+			}
+			if err = demoPro.Create(); err != nil {
+				er(err)
+			}
+		default:
+			fmt.Println("--demo-type value should be one of [golang, clang]")
+			return
+		}
+
+		fmt.Printf("your [%s] code demo project <%s> is ready!!!\n", codeType, projectName)
 	},
 }
 
@@ -72,4 +95,6 @@ func init() {
 	genCmd.Flags().StringP("name", "n", "demo", "demo project name")
 	// pkg name
 	genCmd.Flags().StringP("pkg-name", "", "", "demo pkg name")
+
+	genCmd.Flags().String("demo-type", "golang", "the code type of demo use")
 }
