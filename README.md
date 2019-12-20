@@ -20,7 +20,7 @@ then the `{your_project_name}` project will created in your current directory li
 ### clang
 use `--demo-type` flag
 ```bash
-$ code-gen gen -d -n ysy --demo-type clang
+$ code-gen gen -d -n {your_project_name} --demo-type clang
 
 ./your_project_name
     main.c
