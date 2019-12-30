@@ -10,7 +10,8 @@ import (
 )
 
 type DemoGo struct {
-	PkgName string
+	PkgName           string
+	DisableVSCODEFile bool
 	*Demo
 }
 
@@ -50,11 +51,11 @@ func (d *DemoGo) Create() error {
 		return err
 	}
 
-	return createBaseGOMOD(projectPath, d.PkgName)
+	return d.createBaseGOMOD(projectPath, d.PkgName)
 }
 
 // create go.mod file
-func createBaseGOMOD(projectPath, name string) error {
+func (d *DemoGo) createBaseGOMOD(projectPath, name string) error {
 	modFile, err := os.Create(projectPath + "/go.mod")
 	if err != nil {
 		return err
@@ -62,6 +63,46 @@ func createBaseGOMOD(projectPath, name string) error {
 	defer modFile.Close()
 
 	if _, err := modFile.WriteString(fmt.Sprintf("module %s", name)); err != nil {
+		return err
+	}
+
+	if !d.DisableVSCODEFile {
+		return d.createVSCODEFile(projectPath)
+	}
+
+	return nil
+}
+
+// create .vscode dir and launch.json
+func (d *DemoGo) createVSCODEFile(projectPath string) error {
+	vscodeDir := projectPath + "/.vscode"
+	if err := os.Mkdir(vscodeDir, 0754); err != nil {
+		return err
+	}
+
+	vscodeFile, err := os.Create(vscodeDir + "/launch.json")
+	if err != nil {
+		return err
+	}
+	defer vscodeFile.Close()
+
+	if _, err := vscodeFile.WriteString(`{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go",
+            "env": {},
+            "args": []
+        }
+    ]
+}`); err != nil {
 		return err
 	}
 
